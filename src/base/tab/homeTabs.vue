@@ -60,7 +60,7 @@ import { remoteLoad } from '@/assets/js/remoteLoad'
 export default {
   name: 'homeTabs',
   created () {
-    remoteLoad('http://at.alicdn.com/t/font_1622152_v7yk34zajte.js')
+    remoteLoad('http://at.alicdn.com/t/font_1622152_43bs91ys5tz.js')
   }
 }
 </script>

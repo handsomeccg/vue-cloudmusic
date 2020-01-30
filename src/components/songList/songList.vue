@@ -24,6 +24,7 @@ export default {
       personalized().then(res => {
         if (res.status === 200) {
           this.recommendList = res.data.result
+          console.log(this.recommendList)
         }
       })
     }

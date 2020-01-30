@@ -34,12 +34,19 @@ const routes = [
   {
     path: '/songList',
     name: 'songList',
-    component: () => import('../components/songList/songList')
+    component: () => import('../components/songList/songList'),
+    children: [
+    ]
   },
   {
     path: '/college',
     name: 'college',
     component: () => import('../components/college/college')
+  },
+  {
+    path: '/songList/detail',
+    name: 'songListDetail',
+    component: () => import('../components/songList/songListDetail')
   }
 ]
 

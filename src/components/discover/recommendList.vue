@@ -1,6 +1,6 @@
 <template>
     <div class="recommend-list">
-      <div class="recommend-item" v-for="(item, index) in recommendList" :key="index">
+      <div class="recommend-item" v-for="(item, index) in recommendList" :key="index" @click="toListDetail(item.id)">
         <img v-lazy="item.picUrl" class="recommend-img"/>
         <div class="recommend-text">{{item.name}}</div>
       </div>
@@ -13,6 +13,11 @@ export default {
   props: {
     recommendList: {
       type: Array
+    }
+  },
+  methods: {
+    toListDetail (id) {
+      this.$router.push({ path: '/songList/detail', query: { id: id } })
     }
   }
 }
