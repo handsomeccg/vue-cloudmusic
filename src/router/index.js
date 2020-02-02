@@ -44,7 +44,7 @@ const routes = [
     component: () => import('../components/college/college')
   },
   {
-    path: '/songList/detail',
+    path: '/list/detail',
     name: 'songListDetail',
     component: () => import('../components/songList/songListDetail')
   }

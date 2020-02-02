@@ -36,12 +36,12 @@
             <slider>
               <div v-for="(item, index) in banners" :key="index">
                 <a @click="bannerClick">
-                  <img @load="loadImage" :src="item.imageUrl">
+                  <img :src="item.imageUrl">
                 </a>
               </div>
             </slider>
           </div>
-          <recommend-list :recommend-list="recommendList"></recommend-list>
+          <recommend-list :recommend-list="recommendList" @selected="selectList"></recommend-list>
         </div>
       <!--</scroll>-->
     </div>
@@ -111,19 +111,10 @@ export default {
     bannerClick () {
       console.log('banner click!')
     },
-    loadImage () {
-      if (!this.checked) {
-        this.$refs.scroll.refresh()
-        this.checked = true
-      }
-    },
     showShadow (e) {
       this.shadow = true
       this.searching = true
       this.songResult = false
-      setTimeout(() => {
-        this.$refs.scrollHot.refresh()
-      }, 20)
     },
     hiddenShadow (e) {
       this.shadow = false
@@ -160,6 +151,9 @@ export default {
         console.log(res)
         this.resultSongs = res.data.result.songs
       })
+    },
+    selectList (id) {
+      this.$router.push({ path: '/list/detail', query: { id: id } })
     }
   }
 }
@@ -170,7 +164,7 @@ export default {
   .search {
     width 100%
     padding 0 5%
-    padding-top 5px
+    padding-right 10%
     box-sizing border-box
     position fixed
     background-color #ffff
@@ -185,13 +179,13 @@ export default {
   .recommend,.shadow {
     position: relative
     width: 100%
-    top: 60px
+    top: 65px
     overflow-x hidden
     .recommend-content {
     }
   }
   .slide-enter-active, .slide-leave-active
-    transition: all 0.3s
+    transition: all 0.4s
   .slide-enter, .slide-leave-to
     transform: translate3d(100%, 0, 0)
 </style>

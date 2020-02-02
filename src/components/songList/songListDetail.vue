@@ -1,70 +1,135 @@
 <template>
-  <div class="list-detail">
-    <div class="head">
-      <svg class="icon" aria-hidden="true">
-        <use xlink:href="#icon-fanhui"></use>
-      </svg>
-      <span style="margin-left: 38%">歌单</span>
-    </div>
-    <div class="title">
-      <div class="cover">
-        <img :src="songs.coverImgUrl">
+  <transition name="songList">
+    <div class="list-detail">
+      <div class="head">
+        <svg class="icon" aria-hidden="true" @click="back">
+          <use xlink:href="#icon-fanhui"></use>
+        </svg>
+        <span style="margin-left: 38%">歌单</span>
       </div>
-      <div class="brief">
-        <div class="name">{{songs.name}}</div>
-        <div class="author">
-          <div class="author-avatar" :style="`background-image: url('${songs.creator.avatarUrl}')`"></div>
-          <div class="author-name">{{songs.creator.nickname}}</div>
+      <div class="title">
+        <div class="cover">
+          <img :src="songs.coverImgUrl">
         </div>
-        <div class="description">{{songs.description}}</div>
-      </div>
-    </div>
-    <!--为了滑动不突兀-->
-    <div class="middle"></div>
-    <div class="list-head">
-      <svg class="icon" aria-hidden="true">
-        <use xlink:href="#icon-bofang"></use>
-      </svg>
-      <span>播放全部</span>
-    </div>
-    <div class="song-list-view">
-      <div class="song-item" v-for="(item, index) in songs.tracks || []" :key="index">
-        <div class="song-sequence">{{index+ 1 }}</div>
-        <div class="song-content">
-          <div class="song-name">{{item.name}}</div>
-          <div class="artist">{{item.ar.map(item => item.name).join('/') + '-' + item.al.name}}</div>
+        <div class="brief">
+          <div class="name">{{songs.name}}</div>
+          <div class="author" v-if="songs.creator">
+            <div class="author-avatar" :style="`background-image: url('${songs.creator.avatarUrl}')`"></div>
+            <div class="author-name">{{songs.creator.nickname}}</div>
+          </div>
+          <div class="description">{{songs.description}}</div>
         </div>
       </div>
+      <!--为了滑动不突兀-->
+      <div class="middle"></div>
+      <div class="list-head">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-bofang"></use>
+        </svg>
+        <span>播放全部</span>
+      </div>
+      <div class="song-list-view">
+        <div class="song-item" v-for="(item, index) in songs.tracks || []" :key="index" @click="selectItem(item, index)">
+          <div class="song-sequence">{{index+ 1 }}</div>
+          <div class="song-content">
+            <div class="song-name">{{item.name}}</div>
+            <div class="artist">{{item.ar.map(item => item.name).join('/') + '-' + item.al.name}}</div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>
 import { getSongListDetail } from '@/api/songList'
-
+import { getSongDetail, getSongUrl } from '@/api/song'
+import { mapActions, mapGetters } from 'vuex'
 export default {
   name: 'songListDetail',
   created () {
-    this.songs = {}
     this.getListDetail()
+  },
+  computed: {
+    ...mapGetters([
+      'currentIndex',
+      'fullScreen',
+      'playing'
+    ])
   },
   data () {
     return {
-      songs: {}
+      songs: {},
+      songIds: [],
+      playList: []
     }
   },
   methods: {
-    getListDetail () {
+    async getListDetail () {
       console.log(123)
-      getSongListDetail({ id: this.$route.query.id }).then(res => {
+      await getSongListDetail({ id: this.$route.query.id }).then(res => {
         this.songs = res.data.playlist
+        this.songIds = res.data.playlist.trackIds.map(item => item.id)
+        this.playList = res.data.playlist.tracks.map(item => ({ songTime: item.dt / 1000 }))
+        this.playList.map((item, index) => {
+          item.id = this.songIds[index]
+        })
+        // console.log(this.songs)
       })
-    }
+      // 获取歌曲图片url
+      getSongDetail({ ids: this.songIds.join(',') }).then(res => {
+        // console.log(res.data)
+        res.data.songs.forEach((item, index) => {
+          // this.playList[index] = this.playList[index] || {}
+          this.playList[index].picUrl = item.al.picUrl
+          this.playList[index].name = item.name
+          this.playList[index].artist = item.ar.map(item => item.name).join('/')
+        })
+      })
+      // 获取歌曲url
+      getSongUrl({ id: this.songIds.join(',') }).then(res => {
+        // console.log(this.songIds)
+        // console.log(res.data)
+        res.data.data.forEach((item, index) => {
+          const urlIndex = this.songIds.indexOf(item.id)
+          // this.playList[urlIndex] = this.playList[urlIndex] || {}
+          this.playList[urlIndex].mp3Url = item.url
+        })
+        console.log(this.playList)
+      })
+    },
+    getPics () {
+      getSongDetail({ ids: this.songIds }).then(res => {
+        console.log(res.data)
+      })
+    },
+    getSongsDetail () {
+      getSongUrl({ id: this.songIds }).then(res => {
+        console.log(res.data)
+      })
+    },
+    back () {
+      this.$router.back()
+    },
+    selectItem (item, index) {
+      // console.log(this.playList)
+      // const playList = this.playList.filter(item => item.mp3Url !== null)
+      this.selectPlay({
+        list: this.playList,
+        index
+      })
+    },
+    ...mapActions([
+      'selectPlay',
+      'randomPlay'
+    ])
   },
   watch: {
     '$route' (to, from) {
       if (this.$route.query.id) {
         this.getListDetail()
+        document.body.scrollTop = 0
+        document.documentElement.scrollTop = 0
       }
     }
   }
@@ -72,11 +137,23 @@ export default {
 </script>
 
 <style scoped lang="stylus">
+  .songList-enter-active, .songList-leave-active {
+    transition: all 0.4s
+  }
+  .songList-enter, .songList-leave-to {
+    transform: translate3d(100%, 0, 0)
+  }
  .list-detail {
+   position: absolute
+   z-index: 20
+   top: 0
+   left: 0
+   right: 0
+   background #ffffff
    .head {
      font-size 18px
      width 100%
-     height 20px
+     height 25px
      background #094849
      color #ffff
      padding 13px 14px
@@ -85,13 +162,12 @@ export default {
      z-index 10
    }
    .title {
-     margin-top 42px
      width 100%
      height 190px
      background #094849
      display flex
      color #ececec
-     padding-top 16px
+     padding-top 63px
      .cover {
        width 150px
        height 150px
@@ -108,9 +184,10 @@ export default {
        overflow hidden
        .name {
          letter-spacing 1px
+         line-height 20px
        }
        .author {
-         margin-top 10px
+         margin-top 15px
          display flex
          .author-avatar {
            width 30px
@@ -123,11 +200,23 @@ export default {
            margin-left 5px
            margin-top 8px
            opacity 0.8
+           width 150px
+           overflow hidden
+           white-space nowrap
+           text-overflow:ellipsis
          }
        }
        .description {
          font-size 12px
-         margin-top 60px
+         line-height 15px
+         width 160px
+         color #ececec
+         margin-top 30px
+         overflow hidden
+         text-overflow:ellipsis
+         display -webkit-box
+         -webkit-line-clamp: 2
+         -webkit-box-orient: vertical
        }
      }
    }
@@ -136,7 +225,7 @@ export default {
      height 20px
      background #094849
      position sticky
-     top 46px
+     top 51px
    }
    .list-head {
      box-sizing border-box
@@ -149,7 +238,7 @@ export default {
      border-radius 20px 20px 0 0
      z-index 5
      position sticky
-     top 46px
+     top 51px
    }
    .song-list-view {
      .song-item {
@@ -167,11 +256,19 @@ export default {
          .song-name {
            font-size 18px
            letter-spacing 1px
+           width 280px
+           overflow hidden
+           white-space nowrap
+           text-overflow:ellipsis
          }
          .artist {
            font-size 13px
            color #A9A9A9
            line-height 23px
+           width 280px
+           overflow hidden
+           white-space nowrap
+           text-overflow:ellipsis
          }
        }
      }

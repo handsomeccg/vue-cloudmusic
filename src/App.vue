@@ -4,16 +4,19 @@
       <router-view></router-view>
     </keep-alive>
     <home-tabs></home-tabs>
+    <player></player>
   </div>
 </template>
 
 <script>
 import HomeTabs from '@/base/tab/homeTabs'
 import { getSearchResult } from '@/api/search'
-
+import player from '@/components/player/player'
+import { remoteLoad } from '@/assets/js/remoteLoad'
 export default {
-  components: { HomeTabs },
+  components: { HomeTabs, player },
   created () {
+    remoteLoad('http://at.alicdn.com/t/font_1622152_9vqpkndq395.js')
   },
   data () {
     return {

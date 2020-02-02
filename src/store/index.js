@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import * as types from '@/store/mutationTypes'
 import { playMode } from '@/assets/js/config'
+import { shuffle } from '@/assets/js/util'
 
 Vue.use(Vuex)
 
@@ -33,7 +34,7 @@ export default new Vuex.Store({
       state.fullScreen = flag
     },
     [types.SET_PLAYLIST] (state, list) {
-      state.playlist = list
+      state.playlist = [...list]
     },
     [types.SET_SEQUENCE_LIST] (state, list) {
       state.sequenceList = list
@@ -46,6 +47,19 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    selectPlay ({ commit, state }, { list, index }) {
+      commit(types.SET_SEQUENCE_LIST, list)
+      if (state.mode === playMode.random) {
+        let randomList = shuffle(list)
+        commit(types.SET_PLAYLIST, randomList)
+        index = randomList.findIndex((item) => { return item.id === list[index].id })
+      } else {
+        commit(types.SET_PLAYLIST, list) // 播放模式改变
+      }
+      commit(types.SET_CURRENT_INDEX, index)
+      commit(types.SET_FULL_SCREEN, true)
+      commit(types.SET_PLAYING_STATE, true)
+    }
   },
   modules: {
   }

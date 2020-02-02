@@ -1,6 +1,6 @@
 <template>
     <div class="recommend-list">
-      <div class="recommend-item" v-for="(item, index) in recommendList" :key="index" @click="toListDetail(item.id)">
+      <div class="recommend-item" v-for="(item, index) in recommendList" :key="index" @click="selectItem(item.id)">
         <img v-lazy="item.picUrl" class="recommend-img"/>
         <div class="recommend-text">{{item.name}}</div>
       </div>
@@ -16,8 +16,8 @@ export default {
     }
   },
   methods: {
-    toListDetail (id) {
-      this.$router.push({ path: '/songList/detail', query: { id: id } })
+    selectItem (id) {
+      this.$emit('selected', id)
     }
   }
 }
@@ -39,6 +39,7 @@ export default {
       height 110px
     }
     .recommend-text {
+      height 28px
       font-size 14px
       overflow hidden
       text-overflow:ellipsis

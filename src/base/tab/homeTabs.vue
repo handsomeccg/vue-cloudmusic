@@ -56,12 +56,8 @@
 </template>
 
 <script>
-import { remoteLoad } from '@/assets/js/remoteLoad'
 export default {
-  name: 'homeTabs',
-  created () {
-    remoteLoad('http://at.alicdn.com/t/font_1622152_43bs91ys5tz.js')
-  }
+  name: 'homeTabs'
 }
 </script>
 
@@ -72,6 +68,7 @@ export default {
     position fixed
     width 100%
     bottom 0
+    z-index 99
     .tab-wrapper {
       display: flex;
       height: 44px;

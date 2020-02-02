@@ -1,7 +1,8 @@
 <template>
   <div class="song-list">
     <h1>歌单广场</h1>
-    <recommend-list :recommend-list="recommendList"></recommend-list>
+    <recommend-list :recommend-list="recommendList" @selected="selectList"></recommend-list>
+    <!--<router-view></router-view>-->
   </div>
 </template>
 
@@ -27,6 +28,9 @@ export default {
           console.log(this.recommendList)
         }
       })
+    },
+    selectList (id) {
+      this.$router.push({ path: '/list/detail', query: { id: id } })
     }
   }
 }
@@ -34,6 +38,12 @@ export default {
 
 <style scoped lang="stylus">
   .song-list {
+    position: absolute
+    z-index: 10
+    top: 0
+    left: 0
+    right: 0
+    background #ffffff
     h1 {
       width 20%
       margin 15px auto
