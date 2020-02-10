@@ -12,9 +12,9 @@
         </div>
       </div>
       <div class="middle">
-        <div v-show="!showLyric" class="song-cover" :class="`song-cover-${coverClass}`" :style="`background-image: url('${currentSong.picUrl}')`"></div>
+        <div v-show="!showLyric" class="song-cover" :class="`song-cover-${coverClass}`" :style="`background-image: url('${currentSong.picUrl}')`" @click="switchPic"></div>
         <scroll v-show="showLyric" class="lyric" ref="lyric" :data="lyricList">
-          <div class="lyric-wrapper" @touchstart.prevent="lyricTouchStart" @touchmove.prevent="lyricTouchMove" @touchend.prevent="lyricTouchEnd">
+          <div class="lyric-wrapper" @touchstart.prevent="lyricTouchStart" @touchmove.prevent="lyricTouchMove" @touchend.prevent="lyricTouchEnd" @click.prevent="switchPic">
             <p
               v-for="(item, index) in lyricList"
               :key="index"
@@ -56,7 +56,7 @@
           <svg class="icon next-song" aria-hidden="true" @click="nextSong">
             <use xlink:href="#icon-shangyishou1"></use>
           </svg>
-          <svg class="icon playlist" aria-hidden="true" @click="back">
+          <svg class="icon playlist" aria-hidden="true" @click="showPlayList">
             <use xlink:href="#icon-bofangliebiao"></use>
           </svg>
         </div>
@@ -73,6 +73,23 @@
       </div>
     </progress-circle>
     <audio ref="audio" :src="currentSong.mp3Url" @canplay="ready" @error="error" @timeupdate="updateTime" @ended="end"></audio>
+    <van-popup
+      v-model="playListModal"
+      round
+      position="bottom"
+      :style="{ height: '40%' }"
+    >
+      <div class="play-list">
+        <div v-for="(item, index) in playlist" :key="index" :class="{ currentSong: item.id === currentSong.id }" @click="switchSong(index)">
+          <svg class="icon playlist" aria-hidden="true" v-if="item.id === currentSong.id">
+            <use xlink:href="#icon-xiaolaba"></use>
+          </svg>&nbsp;&nbsp;
+          <span>{{item.name}}</span>
+          <span>{{'-' + item.artist}}</span>
+          <van-divider />
+        </div>
+      </div>
+    </van-popup>
   </div>
 </template>
 
@@ -126,12 +143,18 @@ export default {
         '随机播放'
       ],
       lyricList: [],
-      showLyric: true,
+      showLyric: false,
       currentLyricIndex: 0,
-      playLyric: 0
+      playLyric: 0,
+      playListModal: false
     }
   },
   methods: {
+    switchPic () {
+      this.showLyric = !this.showLyric
+      // 隐藏选择歌词播放的组件
+      this.touch.initiated = false
+    },
     back () {
       this.setFullScreen(false)
     },
@@ -283,6 +306,24 @@ export default {
       // 歌曲加载状态重新置为false
       this.songReady = false
     },
+    // 播放列表切歌
+    switchSong (newIndex) {
+      // 歌曲还未加载完成不进行操作
+      if (!this.songReady) {
+        return
+      }
+      // 如果url不存在,则再到下一首
+      let index = newIndex
+      while (this.playlist[index].mp3Url === null) {
+        index = index + 1
+        if (index === this.playlist.length) {
+          index = 0
+        }
+      }
+      this.setCurrentIndex(index)
+      // 歌曲加载状态重新置为false
+      this.songReady = false
+    },
     ready () {
       this.songReady = true
     },
@@ -305,6 +346,10 @@ export default {
         this.touch.initiated = false
       }, 2000)
       console.log(456)
+    },
+    showPlayList () {
+      this.playListModal = true
+      // todo 含有当前播放歌曲的列表
     },
     ...mapMutations({
       setFullScreen: 'SET_FULL_SCREEN',
@@ -493,6 +538,12 @@ export default {
         position absolute
         top 4px
         left 4px
+      }
+    }
+    .play-list {
+      padding 20px
+      .currentSong {
+        color red
       }
     }
   }

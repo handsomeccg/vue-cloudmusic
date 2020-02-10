@@ -22,7 +22,7 @@
       </div>
       <!--为了滑动不突兀-->
       <div class="middle"></div>
-      <div class="list-head">
+      <div class="list-head" @click="playAll">
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-bofang"></use>
         </svg>
@@ -117,6 +117,12 @@ export default {
       this.selectPlay({
         list: this.playList,
         index
+      })
+    },
+    playAll () {
+      this.selectPlay({
+        list: this.playList,
+        index: 0
       })
     },
     ...mapActions([

@@ -16,7 +16,7 @@ import { remoteLoad } from '@/assets/js/remoteLoad'
 export default {
   components: { HomeTabs, player },
   created () {
-    remoteLoad('http://at.alicdn.com/t/font_1622152_9vqpkndq395.js')
+    remoteLoad('http://at.alicdn.com/t/font_1622152_lt7lo6jgvb.js')
   },
   data () {
     return {
