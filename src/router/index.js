@@ -27,9 +27,22 @@ const routes = [
     component: () => import('../components/video/mvList')
   },
   {
-    path: '/my',
-    name: 'my',
-    component: () => import('../components/my/my')
+    path: '/rank',
+    name: 'rank',
+    redirect: '/rank/list',
+    component: () => import('../components/rank/rank'),
+    children: [
+      {
+        path: '/rank/list',
+        name: 'rankList',
+        component: () => import('../components/rank/rankList')
+      },
+      {
+        path: '/rank/detail',
+        name: 'rankDetail',
+        component: () => import('../components/rank/rankDetail')
+      }
+    ]
   },
   {
     path: '/songList',

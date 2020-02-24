@@ -25,7 +25,7 @@
           </div>
         </div>
         <transition name="slide">
-          <songs-result :songs="resultSongs" v-if="songResult"></songs-result>
+          <songs-result :songs="resultSongs" v-if="songResult" @selectItem="selectSearchItem"></songs-result>
         </transition>
       <!--</scroll>-->
     </div>
@@ -53,6 +53,8 @@ import Slider from '@/base/slider/slider'
 import RecommendList from '@/components/discover/recommendList'
 import SearchHot from '@/components/search/searchHot'
 import songsResult from '@/components/search/songsResult'
+import { mapActions } from 'vuex'
+import { getSongDetail, getSongUrl } from '@/api/song'
 /* import Scroll from '@/base/scroll/scroll' */
 import { banner, personalized } from '@/api/discover'
 import { getSearchDefault, searchHot, searchSuggest, getSearchResult } from '@/api/search'
@@ -154,7 +156,41 @@ export default {
     },
     selectList (id) {
       this.$router.push({ path: '/list/detail', query: { id: id } })
-    }
+    },
+    async selectSearchItem (songIds, index) {
+      const playList = songIds.map(item => ({ id: item }))
+      const ids = songIds.join(',')
+      console.log(playList)
+      // 获取歌曲图片url
+      await getSongDetail({ ids: ids }).then(res => {
+        console.log(res.data)
+        res.data.songs.forEach((item, index) => {
+          playList[index].picUrl = item.al.picUrl
+          playList[index].name = item.name
+          playList[index].artist = item.ar.map(item => item.name).join('/')
+          playList[index].songTime = item.dt / 1000
+        })
+      })
+      // 获取歌曲url
+      await getSongUrl({ id: ids }).then(res => {
+        // console.log(res.data)
+        res.data.data.forEach((item, index) => {
+          const urlIndex = songIds.indexOf(item.id)
+          console.log(urlIndex)
+          // this.playList[urlIndex] = this.playList[urlIndex] || {}
+          playList[urlIndex].mp3Url = item.url
+        })
+      })
+      console.log(playList)
+      this.selectPlay({
+        list: playList,
+        index: index
+      })
+    },
+    ...mapActions([
+      'selectPlay',
+      'randomPlay'
+    ])
   }
 }
 </script>

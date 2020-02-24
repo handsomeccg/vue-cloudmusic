@@ -1,7 +1,7 @@
 <template>
   <div class="song-list">
     <h1>歌单广场</h1>
-    <recommend-list :recommend-list="recommendList" @selected="selectList"></recommend-list>
+    <recommend-list :recommend-list="recommendList" @selected="selectList" class="list"></recommend-list>
     <!--<router-view></router-view>-->
   </div>
 </template>
@@ -45,8 +45,16 @@ export default {
     right: 0
     background #ffffff
     h1 {
-      width 20%
-      margin 15px auto
+      width 100%
+      text-align center
+      padding 18px
+      background #ffffff
+      position fixed
+      top 0
+      left 0
+    }
+    .list {
+      margin-top 55px
     }
   }
 </style>

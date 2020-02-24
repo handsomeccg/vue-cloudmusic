@@ -9,7 +9,7 @@ export function getSongDetail (param) {
   })
 }
 
-// 获取相似音乐
+// 获取歌曲url
 export function getSongUrl (param) {
   return axios({
     url: 'song/url',
@@ -19,7 +19,7 @@ export function getSongUrl (param) {
 }
 
 // 获取相似音乐
-export function getNextSong (param) {
+export function getSimiSong (param) {
   return axios({
     url: 'simi/song',
     method: 'get',

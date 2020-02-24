@@ -2,7 +2,7 @@
   <div class="search-result">
     <h2>单曲</h2>
     <van-divider />
-    <div v-for="(item, index) in songs" :key="index">
+    <div v-for="(item, index) in songs" :key="index" @click="selectItem(index)">
       <div class="song-name">{{item.name}}</div>
       <div class="artist">{{item.artists.map(item => item.name).join('、') + '-' + item.album.name}}</div>
       <van-divider style="margin: 10px 0"/>
@@ -16,6 +16,11 @@ export default {
   props: {
     songs: {
       type: Array
+    }
+  },
+  methods: {
+    selectItem (index) {
+      this.$emit('selectItem', this.songs.map(item => item.id), index)
     }
   }
 }

@@ -98,16 +98,6 @@ export default {
         console.log(this.playList)
       })
     },
-    getPics () {
-      getSongDetail({ ids: this.songIds }).then(res => {
-        console.log(res.data)
-      })
-    },
-    getSongsDetail () {
-      getSongUrl({ id: this.songIds }).then(res => {
-        console.log(res.data)
-      })
-    },
     back () {
       this.$router.back()
     },

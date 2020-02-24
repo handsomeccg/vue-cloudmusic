@@ -13,8 +13,8 @@
       </div>
       <div class="middle">
         <div v-show="!showLyric" class="song-cover" :class="`song-cover-${coverClass}`" :style="`background-image: url('${currentSong.picUrl}')`" @click="switchPic"></div>
-        <scroll v-show="showLyric" class="lyric" ref="lyric" :data="lyricList">
-          <div class="lyric-wrapper" @touchstart.prevent="lyricTouchStart" @touchmove.prevent="lyricTouchMove" @touchend.prevent="lyricTouchEnd" @click.prevent="switchPic">
+        <scroll v-if="showLyric" class="lyric" ref="lyric" :data="lyricList">
+          <div class="lyric-wrapper" @touchstart.prevent="lyricTouchStart" @touchmove.prevent="lyricTouchMove" @touchend.prevent="lyricTouchEnd" @click="switchPic">
             <p
               v-for="(item, index) in lyricList"
               :key="index"
@@ -152,6 +152,7 @@ export default {
   methods: {
     switchPic () {
       this.showLyric = !this.showLyric
+      // this.$refs.lyric.refresh()
       // 隐藏选择歌词播放的组件
       this.touch.initiated = false
     },
@@ -162,7 +163,7 @@ export default {
       const currentTime = e.target.currentTime
       this.currentTime = currentTime
       // 滑动歌词的时候不做自动滚动
-      if (!this.touch.initiated) {
+      if (!this.touch.initiated && this.showLyric) {
         this.updateCurrentLyric(currentTime)
       }
     },

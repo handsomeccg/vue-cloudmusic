@@ -21,14 +21,14 @@
           <div class="tab-link">视频</div>
         </div>
       </router-link>
-      <router-link tag="div" class="tab-item" to="/my">
+      <router-link tag="div" class="tab-item" to="/rank">
         <div class="tab-item-wrapper">
           <div class="tab-icon">
             <svg class="icon" aria-hidden="true">
               <use xlink:href="#icon-yinyue"></use>
             </svg>
           </div>
-          <div class="tab-link">我的</div>
+          <div class="tab-link">排行榜</div>
         </div>
       </router-link>
       <router-link tag="div" class="tab-item" to="/songList">
