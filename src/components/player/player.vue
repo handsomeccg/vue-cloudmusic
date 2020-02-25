@@ -1,7 +1,7 @@
 <template>
   <div class="player" v-if="playlist.length > 0">
     <transition name="normalPlayer">
-      <div class="normal-player" v-show="fullScreen">
+      <div class="normal-player" v-show="fullScreen" @touchmove.prevent>
       <div class="head">
         <svg class="icon" aria-hidden="true" @click="back">
           <use xlink:href="#icon-fanhui"></use>
@@ -337,12 +337,10 @@ export default {
       console.log(123)
     },
     lyricTouchMove () {
-      if (!this.touch.initiated) {
-      }
     },
     lyricTouchEnd () {
-      this.timeout = null
-      clearTimeout(this.timeout)
+      /* this.timeout = null
+      clearTimeout(this.timeout) */
       this.timeout = setTimeout(() => {
         this.touch.initiated = false
       }, 2000)
@@ -438,8 +436,8 @@ export default {
       }
       .middle {
         width 100%
-        height 400px
-        margin-top 70px
+        height 350px
+        margin-top 40px
         .song-cover-play {
           animation rotate 25s linear infinite
         }
@@ -486,7 +484,6 @@ export default {
         }
       }
       .bottom {
-        margin-top 20px
         .progress-wrapper {
           display flex
           padding 0 12px
@@ -497,7 +494,7 @@ export default {
           }
         }
         .actions {
-          margin-top 0px
+          margin-top 15px
           display flex
           justify-content space-around
           .icon {
