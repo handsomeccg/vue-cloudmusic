@@ -3,7 +3,7 @@ import { axios } from '../utils/request'
 // 歌曲详情
 export function getSongDetail (param) {
   return axios({
-    url: 'song/detail',
+    url: 'api/song/detail',
     method: 'get',
     params: param
   })
@@ -12,7 +12,7 @@ export function getSongDetail (param) {
 // 获取歌曲url
 export function getSongUrl (param) {
   return axios({
-    url: 'song/url',
+    url: 'api/song/url',
     method: 'get',
     params: param
   })
@@ -21,7 +21,7 @@ export function getSongUrl (param) {
 // 获取相似音乐
 export function getSimiSong (param) {
   return axios({
-    url: 'simi/song',
+    url: 'api/simi/song',
     method: 'get',
     params: param
   })
@@ -30,7 +30,7 @@ export function getSimiSong (param) {
 // 获取歌词
 export function getLyric (param) {
   return axios({
-    url: 'lyric',
+    url: 'api/lyric',
     method: 'get',
     params: param
   })

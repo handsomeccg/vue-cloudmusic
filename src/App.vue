@@ -10,13 +10,12 @@
 
 <script>
 import HomeTabs from '@/base/tab/homeTabs'
-import { getSearchResult } from '@/api/search'
 import player from '@/components/player/player'
 import { remoteLoad } from '@/assets/js/remoteLoad'
 export default {
   components: { HomeTabs, player },
   created () {
-    remoteLoad('http://at.alicdn.com/t/font_1622152_lt7lo6jgvb.js')
+    remoteLoad('http://at.alicdn.com/t/font_1622152_bb3w9b6bsjq.js')
   },
   mounted () {
     setTimeout(() => {
@@ -45,11 +44,6 @@ export default {
     }
   },
   methods: {
-    search () {
-      getSearchResult({ keywords: this.keywords }).then(res => {
-        console.log(res)
-      })
-    }
   }
 }
 </script>

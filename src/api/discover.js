@@ -3,7 +3,7 @@ import { axios } from '../utils/request'
 // 轮播图
 export function banner (param) {
   return axios({
-    url: 'banner',
+    url: 'api/banner',
     method: 'get',
     params: param
   })
@@ -12,7 +12,7 @@ export function banner (param) {
 // 推荐歌单
 export function personalized (param) {
   return axios({
-    url: 'personalized',
+    url: 'api/personalized',
     method: 'get',
     params: param
   })

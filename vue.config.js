@@ -8,7 +8,10 @@ const vueConfig = {
     proxy: {
       '/': {
         target: 'https://music.linkorg.club/',
-        changeOrigin: true
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': '/' // rewrite path
+        }
       }
     }
   }

@@ -3,7 +3,7 @@ import { axios } from '../utils/request'
 // 搜索结果
 export function getSearchResult (param) {
   return axios({
-    url: 'search',
+    url: 'api/search',
     method: 'get',
     params: param
   })
@@ -12,7 +12,7 @@ export function getSearchResult (param) {
 // 默认搜索关键词
 export function getSearchDefault (param) {
   return axios({
-    url: 'search/default',
+    url: 'api/search/default',
     method: 'get',
     params: param
   })
@@ -21,7 +21,7 @@ export function getSearchDefault (param) {
 // 热搜榜
 export function searchHot (param) {
   return axios({
-    url: 'search/hot/detail',
+    url: 'api/search/hot/detail',
     method: 'get',
     params: param
   })
@@ -30,7 +30,7 @@ export function searchHot (param) {
 // 搜索建议
 export function searchSuggest (param) {
   return axios({
-    url: 'search/suggest',
+    url: 'api/search/suggest',
     method: 'get',
     params: param
   })

@@ -2,66 +2,69 @@
   <div class="player" v-if="playlist.length > 0">
     <transition name="normalPlayer">
       <div class="normal-player" v-show="fullScreen" @touchmove.prevent>
-      <div class="head">
-        <svg class="icon" aria-hidden="true" @click="back">
-          <use xlink:href="#icon-fanhui"></use>
-        </svg>
-        <div class="song-info">
-          <span class="song-name">{{currentSong.name}}</span><br/>
-          <span class="song-artist">{{currentSong.artist}}</span>
+        <div class="background">
+          <img width="100%" height="100%" :src="currentSong.picUrl">
         </div>
-      </div>
-      <div class="middle">
-        <div v-show="!showLyric" class="song-cover" :class="`song-cover-${coverClass}`" :style="`background-image: url('${currentSong.picUrl}')`" @click="switchPic"></div>
-        <scroll v-if="showLyric" class="lyric" ref="lyric" :data="lyricList">
-          <div class="lyric-wrapper" @touchstart.prevent="lyricTouchStart" @touchmove.prevent="lyricTouchMove" @touchend.prevent="lyricTouchEnd" @click="switchPic">
-            <p
-              v-for="(item, index) in lyricList"
-              :key="index"
-              ref="lyricText"
-              class="lyric-text"
-              :class="{'lyric-active': index === currentLyricIndex}"
-            >
-              {{item.text}}</p>
+        <div class="head">
+          <svg class="icon" aria-hidden="true" @click="back">
+            <use xlink:href="#icon-fanhui"></use>
+          </svg>
+          <div class="song-info">
+            <span class="song-name">{{currentSong.name}}</span><br/>
+            <span class="song-artist">{{currentSong.artist}}</span>
           </div>
-        </scroll>
-        <div class="move-play" v-show="this.touch.initiated">
-          <svg class="icon play" aria-hidden="true" @click="getLyricPosition">
-            <use xlink:href="#icon-bofang1"></use>
-          </svg>
-          <div class="divide" ref="divide"></div>
         </div>
-      </div>
-      <div class="bottom">
-        <div class="progress-wrapper">
-          <div class="currentTime time">{{timeFormat(this.currentTime)}}</div>
-          <progress-bar class="progress" :percent="progressPercent" @changePercent="changePercent"></progress-bar>
-          <div class="totalTime time">{{timeFormat(this.currentSong.songTime)}}</div>
-        </div>
-        <div class="actions">
-          <svg class="icon mode" aria-hidden="true" @click="changeMode">
-            <use :xlink:href="modeIcon[mode]"></use>
-          </svg>
-          <svg class="icon last-song" aria-hidden="true" @click="prevSong">
-            <use xlink:href="#icon-shangyishou3"></use>
-          </svg>
-          <div class="play-stop" @click="togglePlay">
-            <svg class="icon stop" aria-hidden="true" v-if="playing">
-              <use xlink:href="#icon-zantingtingzhi"></use>
-            </svg>
-            <svg class="icon play" aria-hidden="true" v-else>
+        <div class="middle">
+          <div v-show="!showLyric" class="song-cover" :class="`song-cover-${coverClass}`" :style="`background-image: url('${currentSong.picUrl}')`" @click="switchPic"></div>
+          <scroll v-if="showLyric" class="lyric" ref="lyric" :data="lyricList">
+            <div class="lyric-wrapper" @touchstart.prevent="lyricTouchStart" @touchmove.prevent="lyricTouchMove" @touchend.prevent="lyricTouchEnd" @click="switchPic">
+              <p
+                v-for="(item, index) in lyricList"
+                :key="index"
+                ref="lyricText"
+                class="lyric-text"
+                :class="{'lyric-active': index === currentLyricIndex}"
+              >
+                {{item.text}}</p>
+            </div>
+          </scroll>
+          <div class="move-play" v-show="this.touch.initiated">
+            <svg class="icon play" aria-hidden="true" @click="getLyricPosition">
               <use xlink:href="#icon-bofang1"></use>
             </svg>
+            <div class="divide" ref="divide"></div>
           </div>
-          <svg class="icon next-song" aria-hidden="true" @click="nextSong">
-            <use xlink:href="#icon-shangyishou1"></use>
-          </svg>
-          <svg class="icon playlist" aria-hidden="true" @click="showPlayList">
-            <use xlink:href="#icon-bofangliebiao"></use>
-          </svg>
+        </div>
+        <div class="bottom">
+          <div class="progress-wrapper">
+            <div class="currentTime time">{{timeFormat(this.currentTime)}}</div>
+            <progress-bar class="progress" :percent="progressPercent" @changePercent="changePercent"></progress-bar>
+            <div class="totalTime time">{{timeFormat(this.currentSong.songTime)}}</div>
+          </div>
+          <div class="actions">
+            <svg class="icon mode" aria-hidden="true" @click="changeMode">
+              <use :xlink:href="modeIcon[mode]"></use>
+            </svg>
+            <svg class="icon last-song" aria-hidden="true" @click="prevSong">
+              <use xlink:href="#icon-shangyishoushangyige4"></use>
+            </svg>
+            <div class="play-stop" @click="togglePlay">
+              <svg class="icon stop" aria-hidden="true" v-if="playing">
+                <use xlink:href="#icon-zantingtingzhi"></use>
+              </svg>
+              <svg class="icon play" aria-hidden="true" v-else>
+                <use xlink:href="#icon-bofang1"></use>
+              </svg>
+            </div>
+            <svg class="icon next-song" aria-hidden="true" @click="nextSong">
+              <use xlink:href="#icon-shangyishoushangyige3"></use>
+            </svg>
+            <svg class="icon playlist" aria-hidden="true" @click="showPlayList">
+              <use xlink:href="#icon-bofangliebiao"></use>
+            </svg>
+          </div>
         </div>
       </div>
-    </div>
     </transition>
     <progress-circle :radius="33" :percent="progressPercent" class="mini-player-wrapper">
       <div
@@ -188,6 +191,7 @@ export default {
       this.scrollLyric()
     },
     scrollLyric () {
+      this.$refs.lyric && this.$refs.lyric.refresh()
       // 滚动歌词
       const el = this.$refs.lyricText
       this.$refs.lyric.scrollToElement(el[this.currentLyricIndex], 1000, false, -160)
@@ -389,6 +393,12 @@ export default {
         newPlaying ? audio.play() : audio.pause()
       })
     }
+    // 切换回播放器时，刷新scroll使歌词可以正常滚动
+    /* fullScreen (newVal) {
+      if (newVal) {
+        this.$refs.lyric.refresh()
+      }
+    } */
   }
 }
 </script>
@@ -402,18 +412,28 @@ export default {
       top: 0
       bottom: 0
       z-index: 150
-      background: #44A08D
+      background: #373737
       &.normalPlayer-enter-active, &.normalPlayer-leave-active {
         transition: all 0.4s
       }
       &.normalPlayer-enter, &.normalPlayer-leave-to {
         transform: translate3d(100%, 0, 0)
       }
+      .background {
+        position: absolute
+        left: 0
+        top: 0
+        width: 100%
+        height: 100%
+        z-index: -1
+        opacity: 0.6
+        filter: blur(20px)
+      }
       .head {
         padding 10px
         display flex
         color #f5f5f5
-        background-color #3983b9
+        /*background-color #3983b9*/
         .icon {
           font-size 20px
           margin-top 7px
@@ -473,7 +493,7 @@ export default {
           text-align center
           font-size 14px
           line-height 40px
-          height 100%
+          height 90%
           overflow hidden
           .lyric-wrapper {
             padding-top 162px
@@ -500,12 +520,16 @@ export default {
           .icon {
             margin-top 15px
             font-size 20px
+            color #ffffff
+          }
+          .last-song,.next-song {
+            font-size 25px
           }
           .play-stop {
             width 50px
             height 50px
             border-radius 50%
-            border 1px solid
+            border 1px solid #ffffff
             .icon {
               margin-left 17px
             }
