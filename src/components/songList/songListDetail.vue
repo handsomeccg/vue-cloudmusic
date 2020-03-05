@@ -20,23 +20,7 @@
           <div class="description">{{songs.description}}</div>
         </div>
       </div>
-      <!--为了滑动不突兀-->
-      <div class="middle"></div>
-      <div class="list-head" @click="playAll">
-        <svg class="icon" aria-hidden="true">
-          <use xlink:href="#icon-bofang"></use>
-        </svg>
-        <span>播放全部</span>
-      </div>
-      <div class="song-list-view">
-        <div class="song-item" v-for="(item, index) in songs.tracks || []" :key="index" @click="selectItem(item, index)">
-          <div class="song-sequence">{{index+ 1 }}</div>
-          <div class="song-content">
-            <div class="song-name">{{item.name}}</div>
-            <div class="artist">{{item.ar.map(item => item.name).join('/') + '-' + item.al.name}}</div>
-          </div>
-        </div>
-      </div>
+      <list-view :songs="songs" @playAll="playAll" @selectItem="selectItem"></list-view>
     </div>
   </transition>
 </template>
@@ -45,8 +29,10 @@
 import { getSongListDetail } from '@/api/songList'
 import { getSongDetail, getSongUrl } from '@/api/song'
 import { mapActions, mapGetters } from 'vuex'
+import listView from '@/components/songList/listView'
 export default {
   name: 'songListDetail',
+  components: { listView },
   created () {
     this.getListDetail()
   },
@@ -213,59 +199,6 @@ export default {
          display -webkit-box
          -webkit-line-clamp: 2
          -webkit-box-orient: vertical
-       }
-     }
-   }
-   .middle {
-     width 100%
-     height 20px
-     background #094849
-     position sticky
-     top 51px
-   }
-   .list-head {
-     box-sizing border-box
-     margin-top -20px
-     margin-bottom 10px
-     width 100%
-     height 40px
-     padding 15px 10px
-     background-color white
-     border-radius 20px 20px 0 0
-     z-index 5
-     position sticky
-     top 51px
-   }
-   .song-list-view {
-     .song-item {
-       display flex
-       padding 0 15px
-       margin-bottom 15px
-       .song-sequence {
-         display flex
-         align-items center
-         font-size 18px
-         color #A9A9A9
-       }
-       .song-content {
-         margin-left 15px
-         .song-name {
-           font-size 18px
-           letter-spacing 1px
-           width 280px
-           overflow hidden
-           white-space nowrap
-           text-overflow:ellipsis
-         }
-         .artist {
-           font-size 13px
-           color #A9A9A9
-           line-height 23px
-           width 280px
-           overflow hidden
-           white-space nowrap
-           text-overflow:ellipsis
-         }
        }
      }
    }

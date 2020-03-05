@@ -13,6 +13,7 @@ const routes = [
     path: '/discover',
     name: 'discover',
     component: () => import('../components/discover/discover'),
+    meta: { keepAlive: true },
     children: [
       {
         path: '/search',
@@ -24,6 +25,7 @@ const routes = [
   {
     path: '/mv',
     name: 'mvList',
+    meta: { keepAlive: true },
     component: () => import('../components/video/mvList')
   },
   {
@@ -35,6 +37,7 @@ const routes = [
       {
         path: '/rank/list',
         name: 'rankList',
+        meta: { keepAlive: true },
         component: () => import('../components/rank/rankList')
       },
       {
@@ -47,6 +50,7 @@ const routes = [
   {
     path: '/songList',
     name: 'songList',
+    meta: { keepAlive: true },
     component: () => import('../components/songList/songList'),
     children: [
     ]
@@ -54,6 +58,7 @@ const routes = [
   {
     path: '/college',
     name: 'college',
+    meta: { keepAlive: true },
     component: () => import('../components/college/college')
   },
   {
